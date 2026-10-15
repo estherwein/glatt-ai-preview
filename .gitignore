@@ -1,1 +1,10 @@
 .DS_Store
+
+# Local lead-service credentials and tooling
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+.wrangler/
+node_modules/
+.clasp.json

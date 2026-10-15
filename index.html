@@ -906,6 +906,15 @@ body::after{
 .form-success h3{font-size:1.6rem;font-weight:700}
 .form-success p{color:var(--text-soft-blue);max-width:calc(380px * var(--s));line-height:1.7}
 
+/* Lead form states; no idle layout changes. */
+.lead-honeypot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);pointer-events:none}
+.lead-status{margin-top:16px;color:#9b1936;font-size:.95rem;line-height:1.6;text-align:center}
+.frm-submit:disabled{cursor:wait;opacity:.7}
+.frm-field [aria-invalid="true"]{border-color:#9b1936}
+#leadPrivacy a{text-decoration:underline}
+#leadStatus[hidden],#leadPrivacy[hidden]{display:none}
+.form-success[aria-hidden="true"]{visibility:hidden}
+
 /* ---------- footer — סצנת הסיום: לוגו, תגית וקו נצנוץ מעל תמונת רקע אחת מדויקת ---------- */
 .footer{text-align:center}
 .f-panel{
@@ -1605,7 +1614,8 @@ body::after{
         </p>
       </div>
       <div class="form-card" data-fade>
-      <form id="fitForm" novalidate>
+      <form id="fitForm" novalidate aria-describedby="leadStatus">
+        <div class="lead-honeypot" aria-hidden="true"><label for="leadWebsite">Website</label><input id="leadWebsite" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="frm-grid">
           <div class="frm-field">
             <label for="fname">שם מלא</label>
@@ -1634,8 +1644,10 @@ body::after{
         </div>
         <button class="frm-submit" type="submit">שולחים לבדיקת התאמה <span class="arr">←</span></button>
         <p class="frm-micro">בלי דואר זבל. שיחה אחת קצרה - זה הכול.</p>
+        <p id="leadStatus" class="lead-status" role="alert" hidden></p>
+        <p id="leadPrivacy" class="frm-micro" hidden></p>
       </form>
-      <div class="form-success" id="formSuccess">
+      <div class="form-success" id="formSuccess" aria-hidden="true">
         <div class="bigcheck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h3>הפרטים התקבלו!</h3>
         <p>נחזור אליך בהקדם לשיחת התאמה קצרה — על המטרות שלך, על הרקע, ועל המסלול.</p>
@@ -1918,24 +1930,7 @@ document.querySelectorAll('.radios').forEach(function(g){
   });
 });
 
-/* ---------- form ---------- */
-document.getElementById('fitForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  var name=document.getElementById('fname'), phone=document.getElementById('fphone');
-  var ok=true;
-  [name,phone].forEach(function(f){
-    if(!f.value.trim()){ ok=false; f.style.borderColor='#FF6A3D'; f.style.boxShadow='0 0 0 4px rgba(255,106,61,.18)';
-      setTimeout(function(){f.style.borderColor='';f.style.boxShadow='';},2200);
-    }
-  });
-  if(!ok) return;
-  document.getElementById('formSuccess').classList.add('show');
-});
-document.getElementById('successBack').addEventListener('click',function(){
-  document.getElementById('formSuccess').classList.remove('show');
-  document.getElementById('fitForm').reset();
-  var L=window.__qa&&window.__qa.lenis; if(L) L.scrollTo('#opener'); else document.getElementById('opener').scrollIntoView({behavior:reduceMotion?'auto':'smooth'});
-});
+/* Lead form submission is handled in assets/leads-form.js. */
 })();
 </script>
 <script>
@@ -2036,5 +2031,8 @@ document.querySelectorAll('#business-opportunity .sales-card').forEach(function(
   });
 });
 </script>
+<script src="assets/leads-core.js"></script>
+<script src="assets/leads-config.js"></script>
+<script src="assets/leads-form.js"></script>
 </body>
 </html>
